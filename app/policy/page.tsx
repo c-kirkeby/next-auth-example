@@ -1,4 +1,7 @@
+import { unstable_noStore as noStore } from "next/cache"
+
 export default function PolicyPage() {
+  noStore()
   return (
     <div className="space-y-2">
       <section>

@@ -1,8 +1,11 @@
 import CustomLink from "@/components/custom-link"
 import SessionData from "@/components/session-data"
 import { auth } from "auth"
+import { unstable_noStore as noStore } from "next/cache"
+
 
 export default async function Page() {
+  noStore()
   const session = await auth()
   return (
     <div className="space-y-2">

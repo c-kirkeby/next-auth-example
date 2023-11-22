@@ -1,4 +1,4 @@
-import NextAuth from "next-auth"
+import NextAuth from "next-auth";
 
 // import Apple from "next-auth/providers/apple"
 // import Atlassian from "next-auth/providers/atlassian"
@@ -22,7 +22,7 @@ import NextAuth from "next-auth"
 // import Foursquare from "next-auth/providers/foursquare"
 // import Freshbooks from "next-auth/providers/freshbooks"
 // import Fusionauth from "next-auth/providers/fusionauth"
-import GitHub from "next-auth/providers/github"
+import GitHub from "next-auth/providers/github";
 // import Gitlab from "next-auth/providers/gitlab"
 // import Google from "next-auth/providers/google"
 // import Hubspot from "next-auth/providers/hubspot"
@@ -63,83 +63,107 @@ import GitHub from "next-auth/providers/github"
 // import Zoho from "next-auth/providers/zoho"
 // import Zoom from "next-auth/providers/zoom"
 
-import type { NextAuthConfig } from "next-auth"
+import type { NextAuthConfig } from "next-auth";
+import { unstable_noStore as noStore } from "next/cache";
 
-export const config = {
-  theme: {
-    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
-  },
-  providers: [
-    // Apple,
-    // Atlassian,
-    // Auth0,
-    // Authentik,
-    // AzureAD,
-    // AzureB2C,
-    // Battlenet,
-    // Box,
-    // BoxyHQSAML,
-    // Bungie,
-    // Cognito,
-    // Coinbase,
-    // Discord,
-    // Dropbox,
-    // DuendeIDS6,
-    // Eveonline,
-    // Facebook,
-    // Faceit,
-    // FortyTwoSchool,
-    // Foursquare,
-    // Freshbooks,
-    // Fusionauth,
-    GitHub,
-    // Gitlab,
-    // Google,
-    // Hubspot,
-    // Instagram,
-    // Kakao,
-    // Keycloak,
-    // Line,
-    // LinkedIn,
-    // Mailchimp,
-    // Mailru,
-    // Medium,
-    // Naver,
-    // Netlify,
-    // Okta,
-    // Onelogin,
-    // Osso,
-    // Osu,
-    // Passage,
-    // Patreon,
-    // Pinterest,
-    // Pipedrive,
-    // Reddit,
-    // Salesforce,
-    // Slack,
-    // Spotify,
-    // Strava,
-    // Todoist,
-    // Trakt,
-    // Twitch,
-    // Twitter,
-    // UnitedEffects,
-    // Vk,
-    // Wikimedia,
-    // Wordpress,
-    // WorkOS,
-    // Yandex,
-    // Zitadel,
-    // Zoho,
-    // Zoom,
-  ],
-  callbacks: {
-    authorized({ request, auth }) {
-      const { pathname } = request.nextUrl
-      if (pathname === "/middleware-example") return !!auth
-      return true
+noStore()
+export const dynamic = 'force-dynamic';
+
+export function getConfig(): NextAuthConfig {
+  const useSecureCookies = (process.env.NEXTAUTH_URL as string).startsWith("https://");
+  const cookiePrefix = useSecureCookies ? "__Secure-" : "";
+  const hostName = new URL(process.env.NEXTAUTH_URL as string).hostname;
+
+  return {
+    theme: {
+      logo: "https://next-auth.js.org/img/logo/logo-sm.png",
     },
-  },
-} satisfies NextAuthConfig
+    providers: [
+      // Apple,
+      // Atlassian,
+      // Auth0,
+      // Authentik,
+      // AzureAD,
+      // AzureB2C,
+      // Battlenet,
+      // Box,
+      // BoxyHQSAML,
+      // Bungie,
+      // Cognito,
+      // Coinbase,
+      // Discord,
+      // Dropbox,
+      // DuendeIDS6,
+      // Eveonline,
+      // Facebook,
+      // Faceit,
+      // FortyTwoSchool,
+      // Foursquare,
+      // Freshbooks,
+      // Fusionauth,
+      GitHub,
+      // Gitlab,
+      // Google,
+      // Hubspot,
+      // Instagram,
+      // Kakao,
+      // Keycloak,
+      // Line,
+      // LinkedIn,
+      // Mailchimp,
+      // Mailru,
+      // Medium,
+      // Naver,
+      // Netlify,
+      // Okta,
+      // Onelogin,
+      // Osso,
+      // Osu,
+      // Passage,
+      // Patreon,
+      // Pinterest,
+      // Pipedrive,
+      // Reddit,
+      // Salesforce,
+      // Slack,
+      // Spotify,
+      // Strava,
+      // Todoist,
+      // Trakt,
+      // Twitch,
+      // Twitter,
+      // UnitedEffects,
+      // Vk,
+      // Wikimedia,
+      // Wordpress,
+      // WorkOS,
+      // Yandex,
+      // Zitadel,
+      // Zoho,
+      // Zoom,
+    ],
+    callbacks: {
+      authorized({ request, auth }) {
+        const { pathname } = request.nextUrl;
+        if (pathname === "/middleware-example") return !!auth;
+        return true;
+      },
+    },
+    cookies: {
+      sessionToken: {
+        name: `${cookiePrefix}next-auth.session-token`,
+        options: {
+          httpOnly: true,
+          sameSite: "lax",
+          path: "/",
+          secure: useSecureCookies,
+          domain: hostName === "localhost" ? hostName : "." + 'example.com', // add a . in front so that subdomains are included
+        },
+      },
+    },
+  }
+}
 
-export const { handlers, auth, signIn, signOut } = NextAuth(config)
+export const config = getConfig();
+
+export const { handlers, auth, signIn, signOut } = NextAuth(config);

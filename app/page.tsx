@@ -1,7 +1,9 @@
 import CustomLink from "@/components/custom-link"
 import packageJSON from "../package.json"
+import { unstable_noStore as noStore } from 'next/cache'
 
 export default function Index() {
+  noStore()
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">NextAuth.js Example</h1>

@@ -3,8 +3,11 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import Footer from "@/components/footer"
 import Header from "@/components/header"
+import { unstable_noStore as noStore } from 'next/cache'
 
 const inter = Inter({ subsets: ["latin"] })
+
+export const dynamic = 'force-dynamic'
 
 export const metadata: Metadata = {
   title: "NextAuth.js Example",
@@ -13,6 +16,7 @@ export const metadata: Metadata = {
 }
 
 export default function RootLayout({ children }: React.PropsWithChildren) {
+  noStore()
   return (
     <html lang="en">
       <body className={inter.className}>

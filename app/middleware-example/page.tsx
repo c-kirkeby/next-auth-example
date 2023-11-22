@@ -1,6 +1,8 @@
 import CustomLink from "@/components/custom-link"
+import { unstable_noStore as noStore } from "next/cache"
 
 export default function Page() {
+  noStore()
   return (
     <div className="space-y-2">
       <h1 className="text-3xl font-bold">Middleware usage</h1>

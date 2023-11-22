@@ -1,8 +1,10 @@
 "use client"
 import CustomLink from "@/components/custom-link"
 import { useEffect, useState } from "react"
+import { unstable_noStore as noStore } from "next/cache"
 
 export default function Page() {
+  noStore()
   const [data, setData] = useState()
   useEffect(() => {
     ;(async () => {
